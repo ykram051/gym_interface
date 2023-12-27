@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once "dbpassword.php";
 $servername = "localhost";
 $username = "root";
@@ -23,7 +25,6 @@ try {
         echo "Invalid username or password";
     } else {
         if (password_verify($password, $result[0]['r_password'])) {
-            session_start();
             $_SESSION['user_id'] = $result[0]['user_id'];
             $_SESSION['username'] = $result[0]['username'];
             header('Location: welcome.php'); // Redirect to the welcome page
