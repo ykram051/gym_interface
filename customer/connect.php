@@ -1,4 +1,5 @@
 <?php
+
 // Assuming you have already started the session after the login
 
 // Include your database connection file or create a connection here
@@ -6,37 +7,44 @@
 // include 'db_connection.php';
 
 // Replace the following with your actual database connection code
+require_once "dbpassword.php";
 $servername = "localhost";
 $username = "root";
-$password = "Ikram2004@";
 $dbname = "gym";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Start the session
+session_start();
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $dbpassword);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $contact = $_POST['contact'];
+    $password = $_POST['r_password'];
+
+    $stmt = $conn->prepare("SELECT * FROM extended_contact_table WHERE contact = :contact");
+    $stmt->bindParam(':contact', $contact);
+    $stmt->execute();
+
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        // Delay response to help prevent username enumeration attacks
+        sleep(2);
+        echo "Invalid username or password";
+    } else {
+        if (password_verify($password, $result[0]['r_password'])) {
+            $_SESSION['user_id'] = $result[0]['user_id'];
+            $_SESSION['username'] = $result[0]['username'];
+            header('Location: welcome.php'); // Redirect to the welcome page
+            exit();
+        } else {
+            echo "Invalid username or password";
+        }
+    }
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
 
-// Assuming the user's contact is stored in a session variable after login
-$contact = $_SESSION['user_contact'];
-
-// Fetch user information from the database
-$sql = "SELECT customer_id, c_name, birth_date, contact FROM Customer WHERE contact = '$contact'";
-$result = $conn->query($sql);
-
-// Check if there is a result
-if ($result->num_rows > 0) {
-    // Output data of each row
-    $row = $result->fetch_assoc();
-    $username = $row["c_name"];
-    $user_id = $row["customer_id"];
-    $birth_date = $row["birth_date"];
-    $contact = $row["contact"];
-} else {
-    // Handle the case where no user is found with the provided contact
-    echo "No user found with the provided contact.";
-}
-
-$conn->close();
+$conn = null;
 ?>
