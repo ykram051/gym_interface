@@ -1,6 +1,6 @@
 <?php
 // Include the database connection file
-require_once "login1.php";
+include "connect_to_db.php";
 
 // Fetch user details (replace this with your actual query)
 $stmt = $conn->prepare("SELECT customer_id , c_name, birth_date, contact FROM Customer WHERE customer_id  = :user_id");

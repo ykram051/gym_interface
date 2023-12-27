@@ -1,7 +1,8 @@
 <?php
 // Include the database connection file or establish a connection here
-require_once "dbpassword.php"; // Change this to the actual filename if needed
-$servername = "localhost";
+//require_once "dbpassword.php"; 
+
+$dbpassword="Ikram2004@";
 $username = "root";
 $dbname = "gym";
 

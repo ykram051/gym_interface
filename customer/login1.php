@@ -1,9 +1,9 @@
 <?php
 session_start(); // Start the session
 
-require_once "dbpassword.php";
 $servername = "localhost";
 $username = "root";
+$dbpassword="Ikram2004@";
 $dbname = "gym";
 
 try {
