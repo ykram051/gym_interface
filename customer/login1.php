@@ -7,7 +7,7 @@ include_once "connect_to_db.php";
 try {
     // Assuming $contact and $password are user inputs 
     $contact = $_POST['contact']; // Replace with your actual input method
-    $password = $_POST['r_password']; // Replace with your actual input method
+    $password = trim($_POST['r_password']); // Replace with your actual input method
 
     $stmt = $conn->prepare("SELECT * FROM extended_contact_table WHERE contact = :contact");
     $stmt->bindParam(':contact', $contact);
