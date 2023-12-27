@@ -1,4 +1,7 @@
-<?php include_once "connect_to_db.php";?>
+<?php 
+session_start();
+if(isset($_SESSION['contact' ]) && isset($_SESSION['r_password'])){
+  ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -158,3 +161,10 @@
     </div>
 
 </html>
+<?php
+    }
+else {
+  header ("location : index.php");
+  exit();
+}
+    ?>

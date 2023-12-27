@@ -1,38 +1,73 @@
 <?php
-session_start(); // Start the session
+session_start();
+include "connect_to_db.php";
 
-include_once "connect_to_db.php";
+function validate($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
 
+if (isset($_POST['contact']) && isset($_POST['r_password'])) {
+    $contact = validate($_POST['contact']);
+    $password = validate($_POST['r_password']);
 
-try {
-    // Assuming $contact and $password are user inputs 
-    $contact = $_POST['contact']; // Replace with your actual input method
-    $password = trim($_POST['r_password']); // Replace with your actual input method
-
-    $stmt = $conn->prepare("SELECT * FROM extended_contact_table WHERE contact = :contact");
-    $stmt->bindParam(':contact', $contact);
-    $stmt->execute();
-
-    // Fetch the result as an associative array
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        echo "Contact does not exist";
-    } else {
-        // Verify the password using password_verify
-        if (password_verify($password, $user['r_password'])) {
-            // Set session variables
-            $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['p_role'] = $user['p_role'];
-
-            echo "User has the role: " . $user['p_role'];
-        } else {
-            echo "Invalid password";
-        }
+    if (empty($contact)) {
+        header("Location: index.php?error=User contact is required");
+        exit();
+    } elseif (empty($password)) {
+        header("Location: index.php?error=Password is required");
+        exit();
     }
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-} finally {
-    $conn = null; // Close the connection in the finally block
+
+    $sql = "SELECT * FROM extended_contact_table WHERE contact = ? AND password = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ss', $contact, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+
+        // Fetch additional information from the customer table
+        $customerSql = "SELECT c_name, customer_id, birth_date FROM customer WHERE contact = ?";
+        $customerStmt = $conn->prepare($customerSql);
+        $customerStmt->bind_param('s', $contact);
+        $customerStmt->execute();
+        $customerResult = $customerStmt->get_result();
+
+        if ($customerResult->num_rows > 0) {
+            $customerData = $customerResult->fetch_assoc();
+
+            // Set additional session variables
+            $_SESSION['username'] = $customerData['c_name'];
+            $_SESSION['user_id'] = $customerData['customer_id'];
+            $_SESSION['birth_date'] = $customerData['birth_date'];
+        }
+
+        $customerStmt->close();
+
+        $_SESSION['contact'] = $row['contact'];
+        $_SESSION['password'] = $row['password'];
+
+        if ($row['p_role'] == 'admin') {
+            header('Location: admin_home.php');
+        } elseif ($row['p_role'] == 'customer') {
+            header('Location: customer_home.php');
+        } else {
+            // Default redirection
+            header('Location: home.php');
+        }
+        exit();
+    } else {
+        // Invalid password
+        header("Location: index.php?error=Invalid password");
+        exit();
+    }
+} else {
+    // Handle the case when contact or password is not set
+    header("Location: index.php?error=Invalid request");
+    exit();
 }
 ?>
