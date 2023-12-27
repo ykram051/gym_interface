@@ -1,3 +1,4 @@
+<?php include_once "connect_to_db.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
 <body>
     <h2>Find role</h2>
     <form action="login1.php" method="post">
-        <label for="Contact">Contact:</label>
+        <label for="contact">Contact:</label>
         <input type="text" name="contact" required>
 
         <label for="password">Password:</label>

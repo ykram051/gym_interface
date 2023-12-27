@@ -1,4 +1,4 @@
-
+<?php include_once "connect_to_db.php";?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

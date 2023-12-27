@@ -1,22 +1,7 @@
 <?php
 // Include the database connection file
-include "connect_to_db.php";
-
-// Fetch user details (replace this with your actual query)
-$stmt = $conn->prepare("SELECT customer_id , c_name, birth_date, contact FROM Customer WHERE customer_id  = :user_id");
-$stmt->bindParam(':user_id', $_SESSION['user_id']); // Assuming you have a user_id stored in the session
-$stmt->execute();
-
-// Fetch the result as an associative array
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Assign values to variables
-$user_id = $result['user_id'];
-$username = $result['c_name'];
-$birth_date = $result['birth_date'];
-$contact = $result['contact'];
+include_once "login.php";
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

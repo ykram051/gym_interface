@@ -1,16 +1,11 @@
 <?php
 session_start(); // Start the session
 
-$servername = "localhost";
-$username = "root";
-$dbpassword="Ikram2004@";
-$dbname = "gym";
+include_once "connect_to_db.php";
+
 
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $dbpassword);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Assuming $contact and $password are user inputs (e.g., from a form)
+    // Assuming $contact and $password are user inputs 
     $contact = $_POST['contact']; // Replace with your actual input method
     $password = $_POST['r_password']; // Replace with your actual input method
 
