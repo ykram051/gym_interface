@@ -35,7 +35,7 @@ try {
             if ($password == $result['r_password']) {
                 echo "Login successful. User has the role: " . $result['p_role'];
 
-                $customerSql = "SELECT ec.contact, ec.p_role, c.c_name, c.customer_id, c.birth_date
+            $customerSql = "SELECT ec.contact, ec.p_role, c.c_name, c.customer_id, c.birth_date
               FROM extended_contact_table ec
               JOIN customer c ON ec.contact = c.contact
               WHERE ec.contact = :contact";
