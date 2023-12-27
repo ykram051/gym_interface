@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); // Start the session
 
 require_once "dbpassword.php";
 $servername = "localhost";
@@ -10,32 +10,34 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $dbpassword);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $contact = $_POST['contact'];
-    $password = $_POST['r_password'];
+    // Assuming $contact and $password are user inputs (e.g., from a form)
+    $contact = $_POST['contact']; // Replace with your actual input method
+    $password = $_POST['r_password']; // Replace with your actual input method
 
     $stmt = $conn->prepare("SELECT * FROM extended_contact_table WHERE contact = :contact");
     $stmt->bindParam(':contact', $contact);
     $stmt->execute();
 
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Fetch the result as an associative array
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$result) {
-        // Delay response to help prevent username enumeration attacks
-        sleep(2);
-        echo "Invalid username or password";
+    if (!$user) {
+        echo "Contact does not exist";
     } else {
-        if (password_verify($password, $result[0]['r_password'])) {
-            $_SESSION['user_id'] = $result[0]['user_id'];
-            $_SESSION['username'] = $result[0]['username'];
-            header('Location: welcome.php'); // Redirect to the welcome page
-            exit();
+        // Verify the password using password_verify
+        if (password_verify($password, $user['r_password'])) {
+            // Set session variables
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['p_role'] = $user['p_role'];
+
+            echo "User has the role: " . $user['p_role'];
         } else {
-            echo "Invalid username or password";
+            echo "Invalid password";
         }
     }
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
+} finally {
+    $conn = null; // Close the connection in the finally block
 }
-
-$conn = null;
 ?>
