@@ -1,6 +1,6 @@
 <?php 
 session_start();
-if(isset($_SESSION['contact' ]) && isset($_SESSION['r_password'])){
+if(isset($_SESSION['contact']) && isset($_SESSION['r_password'])){
   ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -164,7 +164,7 @@ if(isset($_SESSION['contact' ]) && isset($_SESSION['r_password'])){
 <?php
     }
 else {
-  header ("location : index.php");
+  header ("location : index1.php");
   exit();
 }
     ?>

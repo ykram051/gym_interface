@@ -1,6 +1,6 @@
 <?php
 // Include the database connection file
-include_once "login1.php";
+include "login1.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
