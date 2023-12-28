@@ -46,7 +46,10 @@ try {
             $customerStmt->execute();
 
          $customerResult= $customerStmt->fetch(PDO::FETCH_ASSOC);
-                if ($customerResult) {
+                
+                if (!$customerResult) {
+                    echo "Error fetching customer information";
+                } else {
                     // Set additional session variables
                     $_SESSION['username'] = $customerResult['c_name'];
                     $_SESSION['user_id'] = $customerResult['customer_id'];
@@ -54,8 +57,6 @@ try {
 
                     header("Location: customer_home.php");
                     exit();
-                } else {
-                    echo "Error fetching customer information";
                 }
             } else {
                 echo "Invalid password";
