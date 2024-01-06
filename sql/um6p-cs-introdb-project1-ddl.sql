@@ -17,7 +17,7 @@ CREATE TABLE Employee (
 
 -- Create Customer table
 CREATE TABLE Customer (
-    customer_id SMALLINT UNSIGNED auto_increment,
+    customer_id int auto_increment,
     c_name VARCHAR(50) NOT NULL,
     registration_date DATE,
     birth_date DATE NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE Feedback (
     feedback_id SMALLINT UNSIGNED AUTO_INCREMENT,
     f_title VARCHAR(100),
     f_text TEXT,
-    customer_id SMALLINT UNSIGNED,
+    customer_id int,
     admin_id SMALLINT UNSIGNED,
     PRIMARY KEY (feedback_id),
     FOREIGN KEY (admin_id) REFERENCES E_admin(employee_id) ON DELETE SET NULL,
@@ -149,7 +149,7 @@ CREATE TABLE Subscribed(
 	payment_id SMALLINT UNSIGNED, 
 	type_of_payment VARCHAR(20), 
    	date_of_payment DATE , 
-	customer_id SMALLINT UNSIGNED , 
+	customer_id int , 
 	membership_id SMALLINT UNSIGNED , 
 	PRIMARY KEY (payment_id,customer_id) , 
 	FOREIGN KEY (membership_id) REFERENCES Membership(membership_id) 
@@ -235,7 +235,7 @@ CREATE TABLE Maintains (
 CREATE TABLE Rents( 
     space_id SMALLINT UNSIGNED, 
     locker_id SMALLINT UNSIGNED, 
-    customer_id SMALLINT UNSIGNED, 
+    customer_id int, 
     PRIMARY KEY (locker_id, space_id), 
     FOREIGN KEY (customer_id) REFERENCES Customer(customer_id) ON DELETE CASCADE, 
     FOREIGN KEY (space_id) REFERENCES Space(space_id) ON DELETE CASCADE 
